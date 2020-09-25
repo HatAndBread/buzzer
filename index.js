@@ -37,6 +37,7 @@ nameSpace.on('connection', (socket) => {
     console.log(game);
   });
   socket.on('buzz', (player, code) => {
+    console.log('buzz received');
     const game = gameSearch(code);
     game && nameSpace.to(game.host).emit('buzz', player);
     console.log(game);

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import HostsGame from './components/HostsGame';
+import PlayersGame from './components/PlayersGame';
 import JoinScreen from './components/JoinScreen';
 import HostScreen from './components/HostScreen';
 import StartScreen from './components/StartScreen';
@@ -7,6 +9,8 @@ import './App.css';
 import io from 'socket.io-client';
 
 const sock = io('/games');
+
+export { sock };
 
 export const UserContext = React.createContext();
 
@@ -17,28 +21,33 @@ function App() {
   const [hostScreen, setHostScreen] = useState(false);
   const [joinedGame, setJoinedGame] = useState(null);
   const [playerName, setPlayerName] = useState(null);
-  const [hostGamePlayers, setHostgamePlayers] = useState([]);
-  const [playersList, setPlayersList] = useState([]);
+  const [hostGamePlayers, setHostGamePlayers] = useState([]); //all player data
+  const [playersList, setPlayersList] = useState([]); // just usernames
+  const [showHostsGame, setShowHostsGame] = useState(false);
+  const [showPlayersGame, setShowPlayersGame] = useState(false);
+  const [buzzes, setBuzzes] = useState([]);
 
   useEffect(() => {
-    sock.on(
-      'newPlayer',
-      (obj) => {
-        console.log(obj);
-        const arr = [];
-        for (let i = 0; i < obj.players.length; i++) {
-          arr.push(obj.players[i].name);
-        }
-        setPlayersList(arr);
-        console.log(arr);
-        setHostgamePlayers(obj.players);
-      },
-      [sock]
-    );
-    sock.on('buzz', (msg) => {
-      console.log(`buzz from ${msg}`);
+    sock.on('newPlayer', (obj) => {
+      console.log(obj);
+      const arr = [];
+      for (let i = 0; i < obj.players.length; i++) {
+        arr.push(obj.players[i].name);
+      }
+      setPlayersList(arr);
+      console.log(arr);
+      setHostGamePlayers(obj.players);
     });
-  }, []);
+    sock.on('buzz', (name) => {
+      handleBuzz(name);
+    });
+  }, [sock]);
+
+  const handleBuzz = (name) => {
+    console.log(buzzes);
+    setBuzzes((buzzes) => [...buzzes, name]);
+    console.log(buzzes);
+  };
   const joinRoom = (num) => {
     sock.emit('join', `/${num}`);
   };
@@ -87,6 +96,14 @@ function App() {
       console.log('error!');
     }
   };
+
+  const beginHost = () => {
+    console.log('HOSTIN');
+    setJoinScreen(false);
+    setHostScreen(false);
+    setStartScreen(false);
+    setShowHostsGame(true);
+  };
   return (
     <div className="App">
       <button onClick={buzz}>emit!</button>
@@ -100,7 +117,9 @@ function App() {
       <UserContext.Provider value={{ player: playerName, gameCode: gameCode }}>
         {startScreen && <StartScreen goBack={goBack} createGame={createGame} join={join} />}
 
-        {hostScreen && <HostScreen goBack={goBack} gameCode={gameCode} playersList={playersList} />}
+        {hostScreen && (
+          <HostScreen goBack={goBack} gameCode={gameCode} playersList={playersList} beginHost={beginHost} />
+        )}
         {joinScreen && (
           <JoinScreen
             goBack={goBack}
@@ -110,6 +129,8 @@ function App() {
             joinRoom={joinRoom}
           />
         )}
+        {showHostsGame && <HostsGame buzzes={buzzes} setBuzzes={setBuzzes} />}
+        {showPlayersGame && <PlayersGame />}
       </UserContext.Provider>
     </div>
   );
