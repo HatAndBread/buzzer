@@ -21,16 +21,20 @@ function App() {
   const [playersList, setPlayersList] = useState([]);
 
   useEffect(() => {
-    sock.on('newPlayer', (obj) => {
-      console.log(obj);
-      const arr = [];
-      for (let i = 0; i < obj.players.length; i++) {
-        arr.push(obj.players[i].name);
-      }
-      setPlayersList(arr);
-      console.log(arr);
-      setHostgamePlayers(obj.players);
-    });
+    sock.on(
+      'newPlayer',
+      (obj) => {
+        console.log(obj);
+        const arr = [];
+        for (let i = 0; i < obj.players.length; i++) {
+          arr.push(obj.players[i].name);
+        }
+        setPlayersList(arr);
+        console.log(arr);
+        setHostgamePlayers(obj.players);
+      },
+      [sock]
+    );
     sock.on('buzz', (msg) => {
       console.log(`buzz from ${msg}`);
     });
