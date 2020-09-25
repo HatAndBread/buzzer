@@ -26,11 +26,6 @@ app.get('/', (reg, res) => {
 
 nameSpace.on('connection', (socket) => {
   console.log('a connection!');
-  socket.on('button', (msg) => {
-    console.log(msg);
-    socket.emit('yoyo', msg);
-    socket.broadcast.emit('yoyo', `somebody said : ${msg}`);
-  });
   socket.on('disconnect', () => {
     console.log('disconnected!');
   });
