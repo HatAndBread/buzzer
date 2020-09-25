@@ -21,7 +21,7 @@ function App() {
   const [playersList, setPlayersList] = useState([]);
 
   useEffect(() => {
-    const sock = io();
+    const sock = io('/games');
     setSocket(sock);
     sock.on('yoyo', (msg) => {
       setMessage(msg);

@@ -9,6 +9,8 @@ const gameSearch = require('./game-search');
 const join = require('./join');
 const addP = require('./add-player');
 
+const nameSpace = io.of('/games');
+
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
@@ -22,7 +24,7 @@ app.get('/', (reg, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-io.on('connection', (socket) => {
+nameSpace.on('connection', (socket) => {
   console.log('a connection!');
   socket.on('button', (msg) => {
     console.log(msg);
@@ -36,12 +38,12 @@ io.on('connection', (socket) => {
     const num = room.substring(1); //substring removes character
     const game = gameSearch(num);
     socket.join(room);
-    !game.host ? (game.host = socket.id) : io.to(game.host).emit('newPlayer', game); // Create host when room created
+    !game.host ? (game.host = socket.id) : nameSpace.to(game.host).emit('newPlayer', game); // Create host when room created
     console.log(game);
   });
   socket.on('buzz', (player, code) => {
     const game = gameSearch(code);
-    game && io.to(game.host).emit('buzz', player);
+    game && nameSpace.to(game.host).emit('buzz', player);
     console.log(game);
     console.log(player);
   });
