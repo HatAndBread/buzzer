@@ -6,26 +6,21 @@ import { apiGet, apiPost } from './logic/api.js';
 import './App.css';
 import io from 'socket.io-client';
 
+const sock = io('/games');
+
 export const UserContext = React.createContext();
 
 function App() {
-  const [message, setMessage] = useState('');
   const [gameCode, setGameCode] = useState(null);
   const [startScreen, setStartScreen] = useState(true);
   const [joinScreen, setJoinScreen] = useState(false);
   const [hostScreen, setHostScreen] = useState(false);
   const [joinedGame, setJoinedGame] = useState(null);
   const [playerName, setPlayerName] = useState(null);
-  const [socket, setSocket] = useState(null);
   const [hostGamePlayers, setHostgamePlayers] = useState([]);
   const [playersList, setPlayersList] = useState([]);
 
   useEffect(() => {
-    const sock = io('/games');
-    setSocket(sock);
-    sock.on('yoyo', (msg) => {
-      setMessage(msg);
-    });
     sock.on('newPlayer', (obj) => {
       console.log(obj);
       const arr = [];
@@ -41,10 +36,10 @@ function App() {
     });
   }, []);
   const joinRoom = (num) => {
-    socket.emit('join', `/${num}`);
+    sock.emit('join', `/${num}`);
   };
   const buzz = () => {
-    socket.emit('buzz', playerName, gameCode);
+    sock.emit('buzz', playerName, gameCode);
   };
 
   const goBack = () => {
@@ -91,7 +86,6 @@ function App() {
   return (
     <div className="App">
       <button onClick={buzz}>emit!</button>
-      <p>{message}</p>
       <button
         onClick={() => {
           endGame(gameCode);
