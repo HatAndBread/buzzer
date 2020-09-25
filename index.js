@@ -35,10 +35,9 @@ io.on('connection', (socket) => {
   socket.on('join', (room) => {
     const num = room.substring(1); //substring removes character
     const game = gameSearch(num);
-    !game.host && (game.host = socket.id);
-    console.log(room, 'joined');
     socket.join(room);
-    io.to(room).emit('new', 'howdy');
+    !game.host ? (game.host = socket.id) : io.to(game.host).emit('newPlayer', game); // Create host when room created
+    console.log(game);
   });
   socket.on('buzz', (player, code) => {
     const game = gameSearch(code);

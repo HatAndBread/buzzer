@@ -17,6 +17,8 @@ function App() {
   const [joinedGame, setJoinedGame] = useState(null);
   const [playerName, setPlayerName] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [hostGamePlayers, setHostgamePlayers] = useState([]);
+  const [playersList, setPlayersList] = useState([]);
 
   useEffect(() => {
     const sock = io();
@@ -24,8 +26,15 @@ function App() {
     sock.on('yoyo', (msg) => {
       setMessage(msg);
     });
-    sock.on('new', (msg) => {
-      console.log(msg);
+    sock.on('newPlayer', (obj) => {
+      console.log(obj);
+      const arr = [];
+      for (let i = 0; i < obj.players.length; i++) {
+        arr.push(obj.players[i].name);
+      }
+      setPlayersList(arr);
+      console.log(arr);
+      setHostgamePlayers(obj.players);
     });
     sock.on('buzz', (msg) => {
       console.log(`buzz from ${msg}`);
@@ -93,7 +102,7 @@ function App() {
       <UserContext.Provider value={{ player: playerName, gameCode: gameCode }}>
         {startScreen && <StartScreen goBack={goBack} createGame={createGame} join={join} />}
 
-        {hostScreen && <HostScreen goBack={goBack} gameCode={gameCode} />}
+        {hostScreen && <HostScreen goBack={goBack} gameCode={gameCode} playersList={playersList} />}
         {joinScreen && (
           <JoinScreen
             goBack={goBack}

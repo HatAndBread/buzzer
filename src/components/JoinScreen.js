@@ -28,7 +28,7 @@ export default function JoinScreen(props) {
       console.log('It worked!');
       props.setPlayerName(userName);
       props.setGameCode(enteredCode);
-      props.joinRoom(enteredCode);
+      props.joinRoom(enteredCode, userName);
     } else {
       if ((res.msg = 'used')) {
         alert('Sorry, that name is already used. Please choose a new one❣️✨');
