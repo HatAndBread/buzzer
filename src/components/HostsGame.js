@@ -11,8 +11,6 @@ export default function HostsGame(props) {
   return (
     <div>
       <ol>{buzzes}</ol>
-      YOYOYOYOYO
-      {props.buzzes[0]}
     </div>
   );
 }

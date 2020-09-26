@@ -37,11 +37,17 @@ nameSpace.on('connection', (socket) => {
     console.log(game);
   });
   socket.on('buzz', (player, code) => {
+    // player buzzed
     console.log('buzz received');
     const game = gameSearch(code);
     game && nameSpace.to(game.host).emit('buzz', player);
     console.log(game);
     console.log(player);
+  });
+  socket.on('host', (code) => {
+    // Game host started
+    const room = `/${code}`;
+    socket.to(room).emit('start');
   });
 });
 

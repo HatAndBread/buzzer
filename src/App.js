@@ -25,6 +25,7 @@ function App() {
   const [playersList, setPlayersList] = useState([]); // just usernames
   const [showHostsGame, setShowHostsGame] = useState(false);
   const [showPlayersGame, setShowPlayersGame] = useState(false);
+  const [buzzName, setBuzzName] = useState(null); // player who most recently buzzed
   const [buzzes, setBuzzes] = useState([]);
 
   useEffect(() => {
@@ -39,15 +40,20 @@ function App() {
       setHostGamePlayers(obj.players);
     });
     sock.on('buzz', (name) => {
-      handleBuzz(name);
+      setBuzzName(name);
+    });
+    sock.on('start', () => {
+      //what to do when host starts a game
+      console.log('game started');
     });
   }, [sock]);
 
-  const handleBuzz = (name) => {
-    console.log(buzzes);
-    setBuzzes((buzzes) => [...buzzes, name]);
-    console.log(buzzes);
-  };
+  useEffect(() => {
+    if (!buzzes.includes(buzzName) && buzzName) {
+      setBuzzes((buzzes) => [...buzzes, buzzName]); // Push into state!
+    }
+  }, [buzzName]);
+
   const joinRoom = (num) => {
     sock.emit('join', `/${num}`);
   };
@@ -103,6 +109,7 @@ function App() {
     setHostScreen(false);
     setStartScreen(false);
     setShowHostsGame(true);
+    sock.emit('host', gameCode);
   };
   return (
     <div className="App">
