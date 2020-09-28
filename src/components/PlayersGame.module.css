@@ -1,0 +1,65 @@
+.PlayersGame {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.PlayersGame textarea {
+  background-color: var(--my-black);
+  color: var(--bg-color);
+  font-size: 22px;
+  border-radius: 10px;
+  height: 50vh;
+  width: 50vw;
+  margin: 20px;
+}
+
+.BuzzButton {
+  border-radius: 50%;
+  border-style: outset;
+  border-width: 5px;
+  background-color: var(--my-red);
+  color: var(--my-white);
+  width: 20vw;
+  height: 20vw;
+  font-size: 6vw;
+  overflow: hidden;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.WaitForQuestion {
+  border-radius: 10px;
+  background-color: #c1cbeb;
+  display: flex;
+  border-style: dotted;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: -10px;
+}
+
+.WaitForQuestion img {
+  width: 35vh;
+  height: 20vh;
+  border-radius: 10px;
+}
+
+@media only screen and (max-width: 350px) {
+  .WaitForQuestion {
+    font-size: 12px;
+  }
+  .WaitForQuestion img {
+    width: 25vh;
+    height: 15vh;
+    border-radius: 10px;
+  }
+}
+
+@media only screen and (max-width: 390px) {
+  .WaitForQuestion {
+    font-size: 2vw;
+  }
+}

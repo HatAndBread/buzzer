@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../App.css';
+import styles from './GenericButton.module.css';
 
 export default function GenericButton(props) {
   const handleClick = () => {

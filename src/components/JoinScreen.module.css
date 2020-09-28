@@ -1,0 +1,65 @@
+.JoinScreen {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.NumberDisplay {
+  font-size: 10vw;
+  color: var(--my-white);
+  background-color: var(--my-black);
+  border-radius: 10px;
+  font-family: 'Share Tech Mono', monospace;
+  padding: 10px;
+  margin: 10px;
+  border-style: groove;
+  border-color: var(--my-khaki);
+}
+
+.NumberPad button {
+  border: none;
+  font-size: 10vh;
+  padding: 10px;
+  text-align: center;
+  display: inline-block;
+  font-family: 'Share Tech Mono', monospace;
+  background-color: var(--my-black);
+  color: var(--my-white);
+}
+
+.NumberPad td {
+  background-color: var(--my-black);
+  width: 10vw;
+  height: 10vh;
+  border: 1px solid var(--my-khaki);
+  text-align: center;
+}
+
+.NumberPad td:hover {
+  cursor: pointer;
+}
+
+.NumberPad table {
+  border-collapse: collapse;
+  color: var(--my-white);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.NameInput {
+  border-radius: 10px;
+  width: 20vw;
+  margin: 10px;
+  font-size: 22px;
+}
+
+@media only screen and (max-height: 620px) and (min-width: 350px) {
+  .NumberDisplay {
+    font-size: 10vh;
+    margin: 5px;
+  }
+  .NumberPad button {
+    font-size: 8vh;
+  }
+}

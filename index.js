@@ -4,6 +4,7 @@ const http = require('http').createServer(app);
 const io = (module.exports = require('socket.io')(http));
 const path = require('path');
 const createNewGame = require('./create-new-game.js');
+const images = require('./images');
 const activeGames = createNewGame.activeGames;
 const gameSearch = require('./game-search');
 const join = require('./join');
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'build')));
 app.use('/create', createNewGame.router);
 app.use('/join', join);
+app.use('/images', images);
 app.use('/add-player', addP);
 
 app.get('/', (reg, res) => {
@@ -36,18 +38,24 @@ nameSpace.on('connection', (socket) => {
     !game.host ? (game.host = socket.id) : nameSpace.to(game.host).emit('newPlayer', game); // Create host when room created
     console.log(game);
   });
-  socket.on('buzz', (player, code) => {
+  socket.on('buzz', (player, code, answer) => {
     // player buzzed
     console.log('buzz received');
     const game = gameSearch(code);
-    game && nameSpace.to(game.host).emit('buzz', player);
+    game && nameSpace.to(game.host).emit('buzz', player, answer);
     console.log(game);
     console.log(player);
+    console.log(answer);
   });
   socket.on('host', (code) => {
     // Game host started
     const room = `/${code}`;
     socket.to(room).emit('start');
+  });
+  socket.on('allowAnswers', (code) => {
+    const room = `/${code}`;
+    socket.to(room).emit('allowAnswers');
+    console.log('allowAnswers!');
   });
 });
 

@@ -1,0 +1,11 @@
+.genericButt {
+  border: none;
+  background-color: var(--my-black);
+  color: var(--my-white);
+  font-size: 22px;
+  border-radius: 10px;
+}
+
+.genericButt:hover {
+  cursor: pointer;
+}

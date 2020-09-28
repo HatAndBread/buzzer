@@ -1,0 +1,15 @@
+.StartButton {
+  background-color: var(--my-black);
+  border-radius: 10px;
+  color: var(--my-white);
+  font-size: 36px;
+  display: block;
+  margin: 10px;
+  padding: 10px;
+  border-color: var(--my-khaki);
+  border-style: outset;
+}
+
+.StartButton:hover {
+  cursor: pointer;
+}

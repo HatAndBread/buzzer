@@ -1,0 +1,74 @@
+.HostsGame {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.NameButton {
+  background-color: transparent;
+  border-style: none;
+  font-size: 28px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+@keyframes slidein {
+  from {
+    height: 0px;
+  }
+  to {
+    height: 150px;
+  }
+}
+
+.AnswerCheck {
+  animation: slidein 0.5s;
+  margin: 0;
+  width: 100vw;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--my-black);
+  color: var(--my-red);
+  border-style: ridge;
+  border-color: var(--my-khaki);
+  overflow-y: scroll;
+}
+
+@keyframes fontgrow {
+  from {
+    font-size: 0px;
+  }
+  to {
+    font-size: 50px;
+  }
+}
+.AnswerCheck button {
+  animation: fontgrow 0.5s;
+  font-size: 50px;
+  margin-top: 0px;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 0px;
+  background-color: transparent;
+  border: none;
+}
+
+.RightWrongButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.TimeLimitInput {
+  width: 80px;
+  font-size: xx-large;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.Timer {
+  display: flex;
+  justify-content: center;
+}
+
+.Timer span {
+  font-size: 15vw;
+}

@@ -1,0 +1,8 @@
+.StartScreen {
+  display: flex;
+  position: relative;
+  width: 100vw;
+  flex-direction: column;
+  align-items: center;
+  top: 20vh;
+}

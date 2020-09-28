@@ -22,6 +22,7 @@ function App() {
   const [joinedGame, setJoinedGame] = useState(null);
   const [playerName, setPlayerName] = useState(null);
   const [hostGamePlayers, setHostGamePlayers] = useState([]); //all player data
+  const [allowingAnswers, setAllowingAnswers] = useState(false);
   const [playersList, setPlayersList] = useState([]); // just usernames
   const [showHostsGame, setShowHostsGame] = useState(false);
   const [showPlayersGame, setShowPlayersGame] = useState(false);
@@ -39,26 +40,39 @@ function App() {
       console.log(arr);
       setHostGamePlayers(obj.players);
     });
-    sock.on('buzz', (name) => {
-      setBuzzName(name);
+    sock.on('buzz', (name, answer) => {
+      setBuzzName({ name: name, answer: answer });
+      console.log(answer);
     });
     sock.on('start', () => {
       //what to do when host starts a game
-      console.log('game started');
+      setShowPlayersGame(true);
+      setStartScreen(false);
+      setHostScreen(false);
+      setJoinScreen(false);
     });
-  }, [sock]);
+    sock.on('allowAnswers', () => {
+      setAllowingAnswers(true);
+      console.log('You may answer now');
+    });
+  }, []);
 
   useEffect(() => {
-    if (!buzzes.includes(buzzName) && buzzName) {
-      setBuzzes((buzzes) => [...buzzes, buzzName]); // Push into state!
+    if (buzzName) {
+      if (!buzzes.includes(buzzName.name)) {
+        setBuzzes((buzzes) => [...buzzes, buzzName]); // Push into state!
+      }
     }
   }, [buzzName]);
 
   const joinRoom = (num) => {
     sock.emit('join', `/${num}`);
   };
-  const buzz = () => {
-    sock.emit('buzz', playerName, gameCode);
+  const buzz = (answer) => {
+    sock.emit('buzz', playerName, gameCode, answer);
+  };
+  const allowAnswers = () => {
+    sock.emit('allowAnswers', gameCode);
   };
 
   const goBack = () => {
@@ -95,6 +109,7 @@ function App() {
     setStartScreen(false);
   };
   const endGame = async (code) => {
+    console.log(code);
     const res = await apiPost('/create', { code: code });
     if (res) {
       console.log(res);
@@ -113,14 +128,6 @@ function App() {
   };
   return (
     <div className="App">
-      <button onClick={buzz}>emit!</button>
-      <button
-        onClick={() => {
-          endGame(gameCode);
-        }}
-      >
-        End game
-      </button>
       <UserContext.Provider value={{ player: playerName, gameCode: gameCode }}>
         {startScreen && <StartScreen goBack={goBack} createGame={createGame} join={join} />}
 
@@ -136,8 +143,10 @@ function App() {
             joinRoom={joinRoom}
           />
         )}
-        {showHostsGame && <HostsGame buzzes={buzzes} setBuzzes={setBuzzes} />}
-        {showPlayersGame && <PlayersGame />}
+        {showHostsGame && (
+          <HostsGame buzzes={buzzes} setBuzzes={setBuzzes} allowAnswers={allowAnswers} endGame={endGame} />
+        )}
+        {showPlayersGame && <PlayersGame buzz={buzz} allowingAnswers={allowingAnswers} />}
       </UserContext.Provider>
     </div>
   );

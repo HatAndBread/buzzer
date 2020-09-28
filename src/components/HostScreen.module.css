@@ -1,0 +1,20 @@
+.HostScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+}
+
+.CodeDisplay {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12vw;
+  color: var(--my-black);
+  border-radius: 10px;
+}
+
+.PlayersList {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 20px;
+  width: 100vw;
+}

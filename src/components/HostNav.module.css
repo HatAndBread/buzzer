@@ -1,0 +1,10 @@
+.HostNav {
+  width: 100vw;
+  background-color: var(--my-red);
+}
+
+.EndButton {
+  background-color: transparent;
+  border-style: none;
+  font-size: larger;
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './JoinScreen.module.css';
 
 export default function NumberPad(props) {
   const buttonClick = (e) => {
@@ -14,7 +15,7 @@ export default function NumberPad(props) {
     }
   };
   return (
-    <div>
+    <div className={styles.NumberPad}>
       <table>
         <tbody>
           <tr>
@@ -70,11 +71,8 @@ export default function NumberPad(props) {
           </tr>
           <tr>
             <td>
-              <button onClick={buttonClick} name={'back'}>
-                <span role="img" aria-label="BACK">
-                  ⬅
-                </span>
-                BACK
+              <button onClick={buttonClick} name={'back'} style={{ fontSize: '5vh', padding: '0px' }}>
+                ⬅
               </button>
             </td>
             <td>
@@ -82,12 +80,8 @@ export default function NumberPad(props) {
                 0
               </button>
             </td>
-            <td>
-              <button onClick={buttonClick}>
-                <span role="img" aria-label="Go!">
-                  🆗
-                </span>
-              </button>
+            <td onClick={buttonClick} style={{ fontSize: '4vh' }}>
+              OK
             </td>
           </tr>
         </tbody>
