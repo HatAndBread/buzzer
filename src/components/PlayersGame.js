@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { sock } from '../App';
 import styles from './PlayersGame.module.css';
 export default function PlayersGame(props) {
@@ -7,6 +7,8 @@ export default function PlayersGame(props) {
   const [allowingAnswers, setAllowingAnswers] = useState(false);
   const [afterAnswer, setAfterAnswer] = useState(false);
   const [whileCheckingAnswers, setWhileCheckingAnswers] = useState(false);
+
+  const answerInput = useRef(null);
 
   useEffect(() => {
     sock.on('goToNext', () => {
@@ -32,6 +34,9 @@ export default function PlayersGame(props) {
       setWaitForQuestion(false);
     });
   }, []);
+  useEffect(() => {
+    allowingAnswers && !afterAnswer && answerInput.current.focus();
+  });
 
   const handleChange = (e) => {
     setPlayersAnswer(e.target.value);
@@ -41,7 +46,7 @@ export default function PlayersGame(props) {
     <div className={styles.PlayersGame}>
       {allowingAnswers && !afterAnswer && (
         <div className={styles.Answering}>
-          <textarea placeholder="Type your answer here. ✨" onChange={handleChange}></textarea>
+          <textarea ref={answerInput} placeholder="Type your answer here. ✨" onChange={handleChange}></textarea>
           <BuzzButton
             buzz={() => {
               props.buzz(playersAnswer);

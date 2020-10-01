@@ -3,7 +3,8 @@
   background-color: var(--my-black);
   color: var(--my-white);
   font-size: 22px;
-  border-radius: 10px;
+  border-radius: 5px;
+  margin: 10px;
 }
 
 .genericButt:hover {

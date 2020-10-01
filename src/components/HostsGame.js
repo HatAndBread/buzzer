@@ -139,6 +139,10 @@ export default function HostsGame(props) {
       </li>
     );
   });
+  const closeBoard = () => {
+    setShowLeaderBoard(false);
+  };
+
   return (
     <div className={styles.HostsGame}>
       <HostNav
@@ -175,15 +179,15 @@ export default function HostsGame(props) {
       )}
       {goodJob && (
         <div className={styles.GoodJob}>
-          <img alt="Good job!" src="images/goodjob.gif"></img>
+          <img style={{ borderRadius: '10px' }} alt="Good job!" src="images/goodjob.gif"></img>
         </div>
       )}
       {ohNo && (
         <div className={styles.GoodJob}>
-          <img alt="Oh no!" src="images/ohno.gif"></img>
+          <img style={{ borderRadius: '10px' }} alt="Oh no!" src="images/ohno.gif"></img>
         </div>
       )}
-      {showLeaderBoard && <LeaderBoard leaderBoard={props.leaderBoard} />}
+      {showLeaderBoard && <LeaderBoard leaderBoard={props.leaderBoard} close={closeBoard} />}
     </div>
   );
 }

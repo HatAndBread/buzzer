@@ -149,8 +149,13 @@ function App() {
     setShowHostsGame(true);
     sock.emit('host', gameCode);
   };
+  const cancel = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('draggy stuff!');
+  };
   return (
-    <div className="App">
+    <div className="App" onDragEnter={cancel} onDragOver={cancel}>
       <UserContext.Provider value={{ player: playerName, gameCode: gameCode }}>
         {startScreen && <StartScreen goBack={goBack} createGame={createGame} join={join} />}
 

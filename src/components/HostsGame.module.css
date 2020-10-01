@@ -62,6 +62,7 @@
   width: 80px;
   font-size: xx-large;
   font-family: 'Share Tech Mono', monospace;
+  border-radius: 10px;
 }
 
 .Timer {
@@ -89,8 +90,40 @@
 }
 
 .LeaderBoard {
+  position: fixed;
   user-select: none;
+  background-color: var(--my-black);
+  color: var(--my-white);
+  border-style: double;
+  border-radius: 10px;
+  font-size: 32px;
+  overflow-y: scroll;
+  max-height: 400px;
+  border-color: var(--my-red);
 }
 .LeaderBoard li {
   list-style: none;
+  margin: 0px;
+  margin-left: -10%;
+}
+
+.LeaderBoard ul {
+  margin: 0px;
+  text-align: left;
+}
+
+.LeaderBoard button {
+  position: relative;
+  font-size: 24px;
+  margin: 0px;
+  background-color: transparent;
+  border: none;
+  left: 85%;
+  color: var(--my-white);
+}
+
+.LeaderBoard h2 {
+  margin-top: 0px;
+  margin-bottom: 10px;
+  text-decoration: underline;
 }
