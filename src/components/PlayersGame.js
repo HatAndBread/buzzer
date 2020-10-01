@@ -1,22 +1,46 @@
 import React, { useState, useEffect } from 'react';
+import { sock } from '../App';
 import styles from './PlayersGame.module.css';
 export default function PlayersGame(props) {
   const [waitForQuestion, setWaitForQuestion] = useState(true);
+  const [playersAnswer, setPlayersAnswer] = useState('');
+  const [allowingAnswers, setAllowingAnswers] = useState(false);
   const [afterAnswer, setAfterAnswer] = useState(false);
-  const [playersAnswer, setPlayersAnswer] = useState();
+  const [whileCheckingAnswers, setWhileCheckingAnswers] = useState(false);
+
+  useEffect(() => {
+    sock.on('goToNext', () => {
+      console.log('go to next');
+      setWaitForQuestion(true);
+      setAfterAnswer(false);
+      setAllowingAnswers(false);
+      setWhileCheckingAnswers(false);
+    });
+    sock.on('allowAnswers', () => {
+      console.log('allow answers');
+      setAllowingAnswers(true);
+      setAfterAnswer(false);
+      setWhileCheckingAnswers(false);
+      console.log('You may answer now');
+      setWaitForQuestion(false);
+    });
+    sock.on('checkingAnswers', () => {
+      console.log('check answers');
+      setWhileCheckingAnswers(true);
+      setAfterAnswer(false);
+      setAllowingAnswers(false);
+      setWaitForQuestion(false);
+    });
+  }, []);
+
   const handleChange = (e) => {
     setPlayersAnswer(e.target.value);
   };
-  useEffect(() => {
-    console.log(playersAnswer);
-  }, [playersAnswer]);
-  useEffect(() => {
-    props.allowingAnswers ? setWaitForQuestion(false) : setWaitForQuestion(true);
-  }, [props.allowingAnswers]);
+
   return (
     <div className={styles.PlayersGame}>
-      {props.allowingAnswers && !afterAnswer && (
-        <div>
+      {allowingAnswers && !afterAnswer && (
+        <div className={styles.Answering}>
           <textarea placeholder="Type your answer here. ✨" onChange={handleChange}></textarea>
           <BuzzButton
             buzz={() => {
@@ -38,6 +62,9 @@ export default function PlayersGame(props) {
         </div>
       )}
       {afterAnswer && <img alt="One moment please...✨" src="/images/waiting.gif" style={{ width: '50vh' }}></img>}
+      {whileCheckingAnswers && (
+        <img style={{ width: '50vw' }} src="/images/anticipation.gif" alt="Checking the answers...💖🌈"></img>
+      )}
     </div>
   );
 }

@@ -15,8 +15,15 @@ export default function HostNav(props) {
       >
         END GAME
       </button>
-      <GenericButton text={'Show leader board🥊'} handleClick={props.showLeaderBoard} />
-      <GenericButton text={'Next✨'} handleClick={props.goToNext} />
+      <GenericButton
+        text={'Show leader board🥊'}
+        handleClick={() => {
+          props.setShowLeaderBoard(true);
+        }}
+      />
+      {props.questionTime && <GenericButton text={'Next question✨'} handleClick={props.goToNext} />}
+      {props.showAnswerCheck && <GenericButton text={'Next question✨'} handleClick={props.goToNext} />}
+      {props.showTimer && <GenericButton text={'Skip✨'} handleClick={props.skipQuestion} />}
     </nav>
   );
 }

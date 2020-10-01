@@ -14,19 +14,9 @@
   font-family: 'Share Tech Mono', monospace;
   padding: 10px;
   margin: 10px;
+  user-select: none;
   border-style: groove;
   border-color: var(--my-khaki);
-}
-
-.NumberPad button {
-  border: none;
-  font-size: 10vh;
-  padding: 10px;
-  text-align: center;
-  display: inline-block;
-  font-family: 'Share Tech Mono', monospace;
-  background-color: var(--my-black);
-  color: var(--my-white);
 }
 
 .NumberPad td {
@@ -35,6 +25,8 @@
   height: 10vh;
   border: 1px solid var(--my-khaki);
   text-align: center;
+  font-size: 9vh;
+  user-select: none;
 }
 
 .NumberPad td:hover {

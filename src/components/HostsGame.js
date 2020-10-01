@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import AnswerCheck from './AnswerCheck';
 import HostAskQuestion from './HostAskQuestion';
 import Timer from './Timer';
+import LeaderBoard from './LeaderBoard';
 import styles from './HostsGame.module.css';
 import HostNav from './HostNav';
+import { sock } from '../App';
 
 let exit = 0;
 export default function HostsGame(props) {
@@ -13,26 +15,38 @@ export default function HostsGame(props) {
   const [timeLimit, setTimeLimit] = useState(30);
   const [timeLeft, setTimeLeft] = useState(30);
   const [showTimer, setShowTimer] = useState(false);
+  const [showSadFace, setShowSadFace] = useState(false);
   const [timerStartTime, setTimerStartTime] = useState(0);
   const [questionNumber, setQuestionNumber] = useState(1);
-  useEffect(() => {
-    console.log(props.buzzes);
-    console.log(timeLimit);
-    console.log(timeLeft);
-  });
+  const [showAnswerCheck, setShowAnswerCheck] = useState(false);
+  const [goodJob, setGoodJob] = useState(false);
+  const [ohNo, setOhNo] = useState(false);
+  const [showLeaderBoard, setShowLeaderBoard] = useState(false);
+
   useEffect(() => {
     showTimer && loopy();
   }, [timerStartTime]);
 
+  useEffect(() => {
+    if (timeLeft === 0) {
+      setTimeLeft(timeLimit);
+    }
+  }, [timeLeft]);
+  useEffect(() => {
+    if (showAnswerCheck && props.buzzes.length === 0) {
+      setShowSadFace(true);
+    }
+  }, [showAnswerCheck]);
+
   function loopy() {
-    console.log(showTimer);
     if (Date.now() - timerStartTime + 900 < timeLimit * 1000 && !exit) {
       let secs = Math.floor((timeLimit * 1000 - (Date.now() - timerStartTime)) * 0.001);
       setTimeLeft(secs);
       requestAnimationFrame(loopy);
     } else {
       setShowTimer(false);
-      console.log('finished');
+      setShowAnswerCheck(true);
+      toPlayersCheckingAnswers();
       exit = 0;
     }
   }
@@ -40,28 +54,40 @@ export default function HostsGame(props) {
     setShowTimer(true);
     setTimerStartTime(Date.now());
   };
-  const showLeaderBoard = () => {
-    console.log('showin leader board');
-  };
+
   const handleNameClick = (playersAnswer, name) => {
     setAnswer(playersAnswer);
     setPlayerUnderReview(name);
+    console.log(playersAnswer);
+    if (showTimer) {
+      exit = 1;
+      setShowAnswerCheck(true);
+      setTimeLeft(0);
+      setShowTimer(false);
+      setQuestionTime(false);
+      toPlayersCheckingAnswers();
+    }
   };
-  const handleWrongAnswer = () => {
-    console.log(`${playerUnderReview} answered wrong`);
+
+  const handleAnswer = (points) => {
     const removeArr = [...props.buzzes];
-    const wrongAnswerPlayer = removeArr.shift();
-    console.log(wrongAnswerPlayer, 'answered wrong');
-    console.log(removeArr, 'new array');
+    const plyer = removeArr.shift();
     props.setBuzzes(removeArr);
     setAnswer(null);
+    sock.emit('givePoints', props.gameCode, plyer, points);
+    if (points < 0) {
+      showOhNo();
+    } else {
+      showGoodJob();
+    }
   };
-  const handleRightAnswer = () => {
-    console.log(`${playerUnderReview} answered right`);
-  };
+
   const allowAnswers = () => {
+    exit = 0;
     setQuestionTime(false);
     props.allowAnswers();
+    props.beginHost();
+    setTimeLeft(timeLimit);
     startTimer();
   };
   const goToNext = () => {
@@ -71,10 +97,35 @@ export default function HostsGame(props) {
     setTimeLeft(0);
     setShowTimer(false);
     setQuestionTime(true);
-    console.log('going to next question');
+    setShowAnswerCheck(false);
+    setAnswer(null);
+    setShowSadFace(false);
+    sock.emit('goToNext', props.gameCode);
+  };
+  const skipQuestion = () => {
+    exit = 1;
+    setShowAnswerCheck(true);
+    setTimeLeft(0);
+    setShowTimer(false);
+    setQuestionTime(false);
+    toPlayersCheckingAnswers();
+  };
+  const toPlayersCheckingAnswers = () => {
+    sock.emit('checkingAnswers', props.gameCode);
+  };
+  const showGoodJob = () => {
+    setGoodJob(true);
+    setTimeout(() => {
+      setGoodJob(false);
+    }, 1500);
+  };
+  const showOhNo = () => {
+    setOhNo(true);
+    setTimeout(() => {
+      setOhNo(false);
+    }, 1500);
   };
   const buzzes = props.buzzes.map((buzz) => {
-    console.log(buzz);
     return (
       <li key={buzz.name}>
         <button
@@ -90,7 +141,15 @@ export default function HostsGame(props) {
   });
   return (
     <div className={styles.HostsGame}>
-      <HostNav endGame={props.endGame} goToNext={goToNext} showLeaderBoard={showLeaderBoard} />
+      <HostNav
+        endGame={props.endGame}
+        goToNext={goToNext}
+        setShowLeaderBoard={setShowLeaderBoard}
+        skipQuestion={skipQuestion}
+        questionTime={questionTime}
+        showAnswerCheck={showAnswerCheck}
+        showTimer={showTimer}
+      />
       {questionTime && (
         <HostAskQuestion
           questionNumber={questionNumber}
@@ -100,11 +159,31 @@ export default function HostsGame(props) {
           setTimeLimit={setTimeLimit}
         />
       )}
-      {showTimer && <Timer timeLeft={timeLeft} />}
-      {answer && (
-        <AnswerCheck answer={answer} handleRightAnswer={handleRightAnswer} handleWrongAnswer={handleWrongAnswer} />
+      {showTimer && <Timer timeLeft={timeLeft} buzzes={buzzes} />}
+      {answer && <AnswerCheck answer={answer} handleAnswer={handleAnswer} />}
+      {answer === '' && <AnswerCheck answer={answer} handleAnswer={handleAnswer} />}
+      {showAnswerCheck && props.buzzes.length > 0 && <ol>{buzzes}</ol>}
+      {showAnswerCheck && showSadFace && (
+        <div>
+          <h1>
+            Nobody answered!
+            <span role="img" aria-label="">
+              😭
+            </span>
+          </h1>
+        </div>
       )}
-      <ol>{buzzes}</ol>
+      {goodJob && (
+        <div className={styles.GoodJob}>
+          <img alt="Good job!" src="images/goodjob.gif"></img>
+        </div>
+      )}
+      {ohNo && (
+        <div className={styles.GoodJob}>
+          <img alt="Oh no!" src="images/ohno.gif"></img>
+        </div>
+      )}
+      {showLeaderBoard && <LeaderBoard leaderBoard={props.leaderBoard} />}
     </div>
   );
 }

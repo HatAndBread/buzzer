@@ -6,12 +6,20 @@ export default function AnswerCheck(props) {
     <div className={styles.AnswerCheck}>
       <h1>{props.answer}</h1>
       <div className={styles.RightWrongButtons}>
-        <button onClick={props.handleRightAnswer}>
+        <button
+          onClick={() => {
+            props.handleAnswer(1);
+          }}
+        >
           <span role="img" aria-label="CORRECT">
             🙆‍♀️
           </span>
         </button>
-        <button onClick={props.handleWrongAnswer}>
+        <button
+          onClick={() => {
+            props.handleAnswer(-1);
+          }}
+        >
           <span role="img" aria-label="WRONG">
             🙅‍♀️
           </span>

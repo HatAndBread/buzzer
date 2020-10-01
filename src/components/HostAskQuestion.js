@@ -9,8 +9,8 @@ export default function HostAskQuestion(props) {
   };
   return (
     <div>
-      <h1>Question number: {props.questionNumber}</h1>
-      <label htmlFor="time-limit-input" style={{ fontSize: '22px' }}>
+      <h1 style={{ userSelect: 'none' }}>Question number: {props.questionNumber}</h1>
+      <label htmlFor="time-limit-input" style={{ fontSize: '22px', userSelect: 'none' }}>
         Time limit: &nbsp;
       </label>
       <input

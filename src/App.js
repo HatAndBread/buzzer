@@ -16,28 +16,27 @@ export const UserContext = React.createContext();
 
 function App() {
   const [gameCode, setGameCode] = useState(null);
+  const [gameObject, setGameObject] = useState(null);
   const [startScreen, setStartScreen] = useState(true);
   const [joinScreen, setJoinScreen] = useState(false);
   const [hostScreen, setHostScreen] = useState(false);
   const [joinedGame, setJoinedGame] = useState(null);
   const [playerName, setPlayerName] = useState(null);
   const [hostGamePlayers, setHostGamePlayers] = useState([]); //all player data
-  const [allowingAnswers, setAllowingAnswers] = useState(false);
   const [playersList, setPlayersList] = useState([]); // just usernames
   const [showHostsGame, setShowHostsGame] = useState(false);
   const [showPlayersGame, setShowPlayersGame] = useState(false);
   const [buzzName, setBuzzName] = useState(null); // player who most recently buzzed
   const [buzzes, setBuzzes] = useState([]);
+  const [leaderBoard, setLeaderBoard] = useState([]);
 
   useEffect(() => {
     sock.on('newPlayer', (obj) => {
-      console.log(obj);
       const arr = [];
       for (let i = 0; i < obj.players.length; i++) {
         arr.push(obj.players[i].name);
       }
       setPlayersList(arr);
-      console.log(arr);
       setHostGamePlayers(obj.players);
     });
     sock.on('buzz', (name, answer) => {
@@ -51,11 +50,32 @@ function App() {
       setHostScreen(false);
       setJoinScreen(false);
     });
-    sock.on('allowAnswers', () => {
-      setAllowingAnswers(true);
-      console.log('You may answer now');
+    sock.on('gameObjectUpdated', (game) => {
+      setGameObject(game);
     });
   }, []);
+
+  useEffect(() => {
+    if (gameObject) {
+      const players = [...gameObject.players];
+      players.sort((a, b) => {
+        return a.points - b.points;
+      });
+      players.reverse();
+      let leaders = [];
+      console.log(players);
+      for (let i = 0; i < players.length; i++) {
+        players[i].points === 1
+          ? leaders.push(`⭐️${players[i].name}: ${players[i].points} point`)
+          : leaders.push(`⭐️${players[i].name}: ${players[i].points} points`);
+      }
+      setLeaderBoard(leaders);
+    }
+  }, [gameObject]);
+
+  useEffect(() => {
+    console.log('leader board: ', leaderBoard);
+  }, [leaderBoard]);
 
   useEffect(() => {
     if (buzzName) {
@@ -73,6 +93,9 @@ function App() {
   };
   const allowAnswers = () => {
     sock.emit('allowAnswers', gameCode);
+  };
+  const hostGoToNextQuestion = () => {
+    sock.emit('goToNext', gameCode);
   };
 
   const goBack = () => {
@@ -144,9 +167,19 @@ function App() {
           />
         )}
         {showHostsGame && (
-          <HostsGame buzzes={buzzes} setBuzzes={setBuzzes} allowAnswers={allowAnswers} endGame={endGame} />
+          <HostsGame
+            buzzes={buzzes}
+            setBuzzes={setBuzzes}
+            allowAnswers={allowAnswers}
+            endGame={endGame}
+            beginHost={beginHost}
+            gameCode={gameCode}
+            hostGoToNextQuestion={hostGoToNextQuestion}
+            hostGamePlayers={hostGamePlayers}
+            leaderBoard={leaderBoard}
+          />
         )}
-        {showPlayersGame && <PlayersGame buzz={buzz} allowingAnswers={allowingAnswers} />}
+        {showPlayersGame && <PlayersGame buzz={buzz} />}
       </UserContext.Provider>
     </div>
   );

@@ -9,6 +9,7 @@ const activeGames = createNewGame.activeGames;
 const gameSearch = require('./game-search');
 const join = require('./join');
 const addP = require('./add-player');
+const getPlayer = require('./get-player');
 
 const nameSpace = io.of('/games');
 
@@ -56,6 +57,24 @@ nameSpace.on('connection', (socket) => {
     const room = `/${code}`;
     socket.to(room).emit('allowAnswers');
     console.log('allowAnswers!');
+  });
+  socket.on('goToNext', (code) => {
+    const room = `/${code}`;
+    socket.to(room).emit('goToNext');
+  });
+  socket.on('checkingAnswers', (code) => {
+    const room = `/${code}`;
+    socket.to(room).emit('checkingAnswers');
+    console.log('checking answers');
+  });
+  socket.on('givePoints', (code, player, points) => {
+    const room = `/${code}`;
+    const givePoints = (player) => {
+      player.points += points;
+    };
+    const game = getPlayer(code, player, givePoints);
+    console.log('this is p', game);
+    nameSpace.in(room).emit('gameObjectUpdated', game);
   });
 });
 

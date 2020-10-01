@@ -7,13 +7,20 @@
   height: 100vh;
 }
 
+.Answering {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: scroll;
+}
+
 .PlayersGame textarea {
   background-color: var(--my-black);
   color: var(--bg-color);
   font-size: 22px;
   border-radius: 10px;
-  height: 50vh;
-  width: 50vw;
+  height: 40vh;
+  width: 70vw;
   margin: 20px;
 }
 
