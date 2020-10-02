@@ -77,8 +77,10 @@ export default function HostsGame(props) {
     sock.emit('givePoints', props.gameCode, plyer, points);
     if (points < 0) {
       showOhNo();
+      props.failSound.play();
     } else {
       showGoodJob();
+      props.successSound.play();
     }
   };
 

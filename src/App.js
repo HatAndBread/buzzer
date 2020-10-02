@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import HostsGame from './components/HostsGame';
 import PlayersGame from './components/PlayersGame';
 import JoinScreen from './components/JoinScreen';
@@ -6,6 +6,7 @@ import HostScreen from './components/HostScreen';
 import StartScreen from './components/StartScreen';
 import { apiGet, apiPost } from './logic/api.js';
 import './App.css';
+import s from 's2pd';
 import io from 'socket.io-client';
 
 const sock = io('/games');
@@ -29,6 +30,11 @@ function App() {
   const [buzzName, setBuzzName] = useState(null); // player who most recently buzzed
   const [buzzes, setBuzzes] = useState([]);
   const [leaderBoard, setLeaderBoard] = useState([]);
+  const [bgm, setBgm] = useState(null);
+  const [successSound, setSuccessSound] = useState(null);
+  const [failSound, setFailSound] = useState(null);
+
+  const canvas = useRef();
 
   useEffect(() => {
     sock.on('newPlayer', (obj) => {
@@ -52,6 +58,23 @@ function App() {
     });
     sock.on('gameObjectUpdated', (game) => {
       setGameObject(game);
+    });
+    s.addCanvas(canvas.current, `${window.innerWidth}`, `${window.innerHeight}`);
+    s.onResize(() => {
+      s.resize(window.innerWidth, window.innerHeight);
+    });
+    s.listenForKeyboard();
+    s.listenForMouse();
+    s.listenForTouch();
+    s.stillCanvas();
+    setBgm(new s.Sound('/sound/bgm.mp3', 0.2, true, 1));
+    setSuccessSound(new s.Sound('/sound/success.mp3', 0.4, false, 1));
+    setFailSound(new s.Sound('/sound/failure.mp3', 0.4, false, 1));
+    s.whileLoading(() => {
+      console.log(s.percentLoaded); // print percent of assets loaded to console while loading.
+    });
+    s.loop(() => {
+      console.log(s.percentLoaded);
     });
   }, []);
 
@@ -114,6 +137,8 @@ function App() {
 
   const createGame = async () => {
     const res = await apiGet('/create');
+    s.loadAudio();
+    bgm.play();
     if (res) {
       setGameCode(res.gameNumber);
       setStartScreen(false);
@@ -156,6 +181,7 @@ function App() {
   };
   return (
     <div className="App" onDragEnter={cancel} onDragOver={cancel}>
+      <canvas ref={canvas}></canvas>
       <UserContext.Provider value={{ player: playerName, gameCode: gameCode }}>
         {startScreen && <StartScreen goBack={goBack} createGame={createGame} join={join} />}
 
@@ -182,6 +208,8 @@ function App() {
             hostGoToNextQuestion={hostGoToNextQuestion}
             hostGamePlayers={hostGamePlayers}
             leaderBoard={leaderBoard}
+            failSound={failSound}
+            successSound={successSound}
           />
         )}
         {showPlayersGame && <PlayersGame buzz={buzz} />}

@@ -5,11 +5,12 @@ const io = (module.exports = require('socket.io')(http));
 const path = require('path');
 const createNewGame = require('./create-new-game.js');
 const images = require('./images');
-const activeGames = createNewGame.activeGames;
-const gameSearch = require('./game-search');
 const join = require('./join');
 const addP = require('./add-player');
+const sound = require('./sound');
+const activeGames = createNewGame.activeGames;
 const getPlayer = require('./get-player');
+const gameSearch = require('./game-search');
 
 const nameSpace = io.of('/games');
 
@@ -22,6 +23,7 @@ app.use('/create', createNewGame.router);
 app.use('/join', join);
 app.use('/images', images);
 app.use('/add-player', addP);
+app.use('/sound', sound);
 
 app.get('/', (reg, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));

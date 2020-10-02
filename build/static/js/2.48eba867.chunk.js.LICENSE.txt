@@ -39,3 +39,7 @@ object-assign
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+//!height ? this.height = s2pd.height : this.height = height;
+
+//!width ? this.width = s2pd.width : this.width = width;
