@@ -190,6 +190,7 @@ export default function HostsGame(props) {
         </div>
       )}
       {showLeaderBoard && <LeaderBoard leaderBoard={props.leaderBoard} close={closeBoard} />}
+      <div>Game pin: {props.gameCode}</div>
     </div>
   );
 }
