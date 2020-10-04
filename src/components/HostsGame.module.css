@@ -141,3 +141,20 @@
   top: calc(100vh - 40px);
   left: calc(100vw - 210px);
 }
+
+.PositivePointsNotifier {
+  pointer-events: none;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100px;
+  color: var(--my-red);
+}
+
+.NegativePointsNotifier {
+}

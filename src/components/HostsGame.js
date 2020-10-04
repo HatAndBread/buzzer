@@ -24,6 +24,9 @@ export default function HostsGame(props) {
   const [ohNo, setOhNo] = useState(false);
   const [showLeaderBoard, setShowLeaderBoard] = useState(false);
   const [navOut, setNavOut] = useState(0);
+  const [pointsAvailable, setPointsAvailable] = useState(props.playersList.length);
+  const [pointsText, setPointsText] = useState('points');
+  const [showPoints, setShowpoints] = useState(false);
 
   useEffect(() => {
     showTimer && loopy();
@@ -50,6 +53,18 @@ export default function HostsGame(props) {
       toPlayersCheckingAnswers();
     }
   }, [props.buzzes, props.playersList, showTimer]);
+
+  useEffect(() => {
+    console.log(pointsAvailable);
+    if (pointsAvailable === 0) {
+      setPointsAvailable(props.playersList.length);
+    }
+    if (pointsAvailable === 1) {
+      setPointsText('point');
+    } else {
+      setPointsText('points');
+    }
+  }, [pointsAvailable, props.playersList.length]);
 
   function loopy() {
     if (Date.now() - timerStartTime + 900 < timeLimit * 1000 && !exit) {
@@ -186,8 +201,22 @@ export default function HostsGame(props) {
         />
       )}
       {showTimer && <Timer timeLeft={timeLeft} buzzes={buzzes} />}
-      {answer && <AnswerCheck answer={answer} handleAnswer={handleAnswer} />}
-      {answer === '' && <AnswerCheck answer={answer} handleAnswer={handleAnswer} />}
+      {answer && (
+        <AnswerCheck
+          answer={answer}
+          handleAnswer={handleAnswer}
+          pointsAvailable={pointsAvailable}
+          setPointsAvailable={setPointsAvailable}
+        />
+      )}
+      {answer === '' && (
+        <AnswerCheck
+          answer={answer}
+          handleAnswer={handleAnswer}
+          pointsAvailable={pointsAvailable}
+          setPointsAvailable={setPointsAvailable}
+        />
+      )}
       {showAnswerCheck && props.buzzes.length > 0 && <ol>{buzzes}</ol>}
       {showAnswerCheck && showSadFace && (
         <div>
@@ -211,6 +240,12 @@ export default function HostsGame(props) {
       )}
       {showLeaderBoard && <LeaderBoard leaderBoard={props.leaderBoard} close={closeBoard} />}
       <div className={styles.GamePin}>Game pin: {props.gameCode}</div>
+      {showPoints && (
+        <div className={styles.PositivePointsNotifier}>
+          + {pointsAvailable} {pointsText}!!!
+        </div>
+      )}
+      <div className={styles.NegativePointsNotifier}></div>
     </div>
   );
 }
