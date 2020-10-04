@@ -2,6 +2,13 @@
   font-family: 'Share Tech Mono', monospace;
 }
 
+.AskQuestion {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .NameButton {
   background-color: transparent;
   border-style: none;
@@ -126,4 +133,11 @@
   margin-top: 0px;
   margin-bottom: 10px;
   text-decoration: underline;
+}
+
+.GamePin {
+  position: fixed;
+  font-size: 22px;
+  top: calc(100vh - 40px);
+  left: calc(100vw - 210px);
 }

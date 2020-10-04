@@ -11,6 +11,7 @@ export default function JoinScreen(props) {
   const [userName, setUserName] = useState(null);
   const [createNameScreen, setCreateNameScreen] = useState(false);
   const [waitScreen, setWaitScreen] = useState(false);
+  const [preventPressingJoinTwice, setPreventPressingJoinTwice] = useState(false);
 
   const updateName = (e) => {
     setUserName(e.target.value);
@@ -26,20 +27,26 @@ export default function JoinScreen(props) {
   };
   const joinWithName = async (e) => {
     e && e.preventDefault();
-    const res = await apiPost('/add-player', { player: userName, code: enteredCode });
-    console.log(res);
-    if (res.ok) {
-      console.log('It worked!');
-      props.setPlayerName(userName);
-      props.setGameCode(enteredCode);
-      props.joinRoom(enteredCode, userName);
-      setCreateNameScreen(false);
-      setWaitScreen(true);
-    } else {
-      if ((res.msg = 'used')) {
-        alert('Sorry, that name is already used. Please choose a new one❣️✨');
+    if (userName && !preventPressingJoinTwice) {
+      setPreventPressingJoinTwice(true);
+      const res = await apiPost('/add-player', { player: userName, code: enteredCode });
+      console.log(res);
+      if (res.ok) {
+        setPreventPressingJoinTwice(false);
+        console.log('It worked!');
+        props.setPlayerName(userName);
+        props.setGameCode(enteredCode);
+        props.joinRoom(enteredCode, userName);
+        setCreateNameScreen(false);
+        setWaitScreen(true);
       } else {
-        alert('Sorry, the game you are trying to play no longer seems to be available. Please try again.✨');
+        if ((res.msg = 'used')) {
+          setPreventPressingJoinTwice(false);
+          alert('Sorry, that name is already used. Please choose a new one❣️✨');
+        } else {
+          setPreventPressingJoinTwice(false);
+          alert('Sorry, the game you are trying to play no longer seems to be available. Please try again.✨');
+        }
       }
     }
   };

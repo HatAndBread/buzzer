@@ -68,14 +68,10 @@ function App() {
     s.listenForTouch();
     s.stillCanvas();
     setBgm(new s.Sound('/sound/bgm.mp3', 0.2, true, 1));
-    setSuccessSound(new s.Sound('/sound/success.mp3', 0.4, false, 1));
+    setSuccessSound(new s.Sound('/sound/cheer.mp3', 0.4, false, 1));
     setFailSound(new s.Sound('/sound/failure.mp3', 0.4, false, 1));
-    s.whileLoading(() => {
-      console.log(s.percentLoaded); // print percent of assets loaded to console while loading.
-    });
-    s.loop(() => {
-      console.log(s.percentLoaded);
-    });
+    s.whileLoading(() => {});
+    s.loop(() => {});
   }, []);
 
   useEffect(() => {
@@ -210,6 +206,7 @@ function App() {
             leaderBoard={leaderBoard}
             failSound={failSound}
             successSound={successSound}
+            playersList={playersList}
           />
         )}
         {showPlayersGame && <PlayersGame buzz={buzz} />}

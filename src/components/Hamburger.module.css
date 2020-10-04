@@ -1,0 +1,16 @@
+.Slice {
+  width: 24px;
+  height: 3px;
+  margin: 5px;
+  background-color: black;
+}
+
+.Burger {
+  position: fixed;
+  top: 10px;
+  left: calc(100vw - 40px);
+}
+
+.Burger:hover {
+  cursor: pointer;
+}

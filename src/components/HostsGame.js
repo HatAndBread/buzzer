@@ -5,6 +5,7 @@ import Timer from './Timer';
 import LeaderBoard from './LeaderBoard';
 import styles from './HostsGame.module.css';
 import HostNav from './HostNav';
+import Hamburger from './Hamburger';
 import { sock } from '../App';
 
 let exit = 0;
@@ -22,6 +23,7 @@ export default function HostsGame(props) {
   const [goodJob, setGoodJob] = useState(false);
   const [ohNo, setOhNo] = useState(false);
   const [showLeaderBoard, setShowLeaderBoard] = useState(false);
+  const [navOut, setNavOut] = useState(0);
 
   useEffect(() => {
     showTimer && loopy();
@@ -37,6 +39,17 @@ export default function HostsGame(props) {
       setShowSadFace(true);
     }
   }, [showAnswerCheck]);
+
+  useEffect(() => {
+    if (props.buzzes.length === props.playersList.length && showTimer) {
+      exit = 1;
+      setShowAnswerCheck(true);
+      setTimeLeft(0);
+      setShowTimer(false);
+      setQuestionTime(false);
+      toPlayersCheckingAnswers();
+    }
+  }, [props.buzzes, props.playersList, showTimer]);
 
   function loopy() {
     if (Date.now() - timerStartTime + 900 < timeLimit * 1000 && !exit) {
@@ -67,6 +80,11 @@ export default function HostsGame(props) {
       setQuestionTime(false);
       toPlayersCheckingAnswers();
     }
+  };
+
+  const handleHamburgerClick = () => {
+    console.log('hamburger clicked');
+    navOut ? setNavOut(0) : setNavOut(1);
   };
 
   const handleAnswer = (points) => {
@@ -147,6 +165,7 @@ export default function HostsGame(props) {
 
   return (
     <div className={styles.HostsGame}>
+      <Hamburger handleClick={handleHamburgerClick} />
       <HostNav
         endGame={props.endGame}
         goToNext={goToNext}
@@ -155,6 +174,7 @@ export default function HostsGame(props) {
         questionTime={questionTime}
         showAnswerCheck={showAnswerCheck}
         showTimer={showTimer}
+        out={navOut}
       />
       {questionTime && (
         <HostAskQuestion
@@ -190,7 +210,7 @@ export default function HostsGame(props) {
         </div>
       )}
       {showLeaderBoard && <LeaderBoard leaderBoard={props.leaderBoard} close={closeBoard} />}
-      <div>Game pin: {props.gameCode}</div>
+      <div className={styles.GamePin}>Game pin: {props.gameCode}</div>
     </div>
   );
 }
