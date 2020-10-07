@@ -83,6 +83,11 @@ export default function HostsGame(props) {
       console.log(props.hostGamePlayers); // this contains what you need to send
     }
   }, [showAnswerCheck]);
+  useEffect(() => {
+    if (showAnswerCheck && showSadFace) {
+      props.timeUpSound.play();
+    }
+  }, [showAnswerCheck, showSadFace, props.timeUpSound]);
 
   function loopy() {
     if (Date.now() - timerStartTime + 900 < timeLimit * 1000 && !exit) {

@@ -9,11 +9,12 @@ export default function HostNav(props) {
   const navRef = useRef(null);
   useOutsideAlerter(navRef, props.setNavOut);
   return (
-    <div ref={navRef}>
-      {props.questionTime && <GenericButton text={'Next question✨'} handleClick={props.goToNext} />}
-      {props.showAnswerCheck && <GenericButton text={'Next question✨'} handleClick={props.goToNext} />}
-      {props.showTimer && <GenericButton text={'Skip✨'} handleClick={props.skipQuestion} />}
-      <div className={styles.HostNav} out={props.out}>
+    <div>
+      <div className={styles.TopNav}>
+        {props.showAnswerCheck && <GenericButton text={'Next question✨'} handleClick={props.goToNext} />}
+        {props.showTimer && <GenericButton text={'Skip✨'} handleClick={props.skipQuestion} />}
+      </div>
+      <div className={styles.HostNav} out={props.out} ref={navRef}>
         <GenericButton
           text={'Show leader board🥊'}
           handleClick={() => {
@@ -27,6 +28,7 @@ export default function HostNav(props) {
           className={styles.EndButton}
           onClick={() => {
             props.endGame(gameCode);
+            window.location.reload();
           }}
         >
           END GAME

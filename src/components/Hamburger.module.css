@@ -2,7 +2,7 @@
   width: 24px;
   height: 3px;
   margin: 5px;
-  background-color: black;
+  background-color: var(--my-white);
 }
 
 .Burger {

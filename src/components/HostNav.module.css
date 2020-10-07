@@ -7,7 +7,6 @@
   align-items: flex-start;
   background-color: var(--my-black);
   width: 250px;
-  border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   transition: left 1s;
 }
@@ -21,7 +20,6 @@
   align-items: flex-start;
   background-color: var(--my-black);
   width: 250px;
-  border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   transition: left 1s;
 }
@@ -32,4 +30,9 @@
   font-size: larger;
   color: var(--my-white);
   margin: 10px;
+}
+
+.TopNav {
+  background-color: var(--my-black);
+  height: 50px;
 }

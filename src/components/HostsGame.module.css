@@ -35,8 +35,6 @@
   align-items: center;
   background-color: var(--my-black);
   color: var(--my-red);
-  border-style: ridge;
-  border-color: var(--my-khaki);
   overflow-y: scroll;
 }
 

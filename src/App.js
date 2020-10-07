@@ -33,6 +33,7 @@ function App() {
   const [bgm, setBgm] = useState(null);
   const [successSound, setSuccessSound] = useState(null);
   const [failSound, setFailSound] = useState(null);
+  const [timeUpSound, setTimeUpSound] = useState(null);
 
   const canvas = useRef();
 
@@ -70,6 +71,7 @@ function App() {
     setBgm(new s.Sound('/sound/bgm.mp3', 0.2, true, 1));
     setSuccessSound(new s.Sound('/sound/cheer.mp3', 0.4, false, 1));
     setFailSound(new s.Sound('/sound/failure.mp3', 0.4, false, 1));
+    setTimeUpSound(new s.Sound('/sound/Buzzer-sound.mp3', 0.2, false, 1.3));
     s.whileLoading(() => {});
     s.loop(() => {});
   }, []);
@@ -173,7 +175,6 @@ function App() {
   const cancel = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('draggy stuff!');
   };
   return (
     <div className="App" onDragEnter={cancel} onDragOver={cancel}>
@@ -206,6 +207,7 @@ function App() {
             leaderBoard={leaderBoard}
             failSound={failSound}
             successSound={successSound}
+            timeUpSound={timeUpSound}
             playersList={playersList}
           />
         )}
