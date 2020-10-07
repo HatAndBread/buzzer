@@ -139,7 +139,7 @@
   position: fixed;
   font-size: 22px;
   top: calc(100vh - 40px);
-  left: calc(100vw - 210px);
+  left: calc(100vw - 230px);
 }
 
 .PositivePointsNotifier {
