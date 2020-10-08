@@ -23,6 +23,12 @@
     -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
     <title>Joshko</title>
+    <script>
+      if (location.protocol != 'https:' && location.hostname != 'localhost') {
+        console.log(location.hostname);
+        location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
