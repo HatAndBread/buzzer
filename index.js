@@ -8,7 +8,6 @@ const images = require('./images');
 const join = require('./join');
 const addP = require('./add-player');
 const sound = require('./sound');
-const activeGames = createNewGame.activeGames;
 const getPlayer = require('./get-player');
 const gameSearch = require('./game-search');
 

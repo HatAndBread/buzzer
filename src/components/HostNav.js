@@ -19,6 +19,7 @@ export default function HostNav(props) {
           text={'Show leader board🥊'}
           handleClick={() => {
             props.setShowLeaderBoard(true);
+            props.setNavOut(0);
           }}
         />
         {props.questionTime && <GenericButton text={'Next question✨'} handleClick={props.goToNext} />}

@@ -139,20 +139,26 @@
   top: calc(100vh - 40px);
   left: calc(100vw - 230px);
 }
-
+@keyframes appear {
+  from {
+    font-size: 0vw;
+  }
+  to {
+    font-size: 7vw;
+  }
+}
 .PositivePointsNotifier {
+  animation: appear 1s;
   pointer-events: none;
   position: fixed;
+  margin-top: 100px;
   top: 0px;
   left: 0px;
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   font-size: 100px;
   color: var(--my-red);
-}
-
-.NegativePointsNotifier {
 }

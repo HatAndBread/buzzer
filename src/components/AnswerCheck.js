@@ -11,6 +11,7 @@ export default function AnswerCheck(props) {
             onClick={() => {
               props.setPointsAvailable(props.pointsAvailable - 1);
               props.handleAnswer(props.pointsAvailable);
+              props.setPlusOrMinus('+');
             }}
           >
             <span role="img" aria-label="CORRECT">
@@ -21,6 +22,7 @@ export default function AnswerCheck(props) {
             onClick={() => {
               props.setPointsAvailable(props.pointsAvailable - 1);
               props.handleAnswer(props.pointsAvailable * -1);
+              props.setPlusOrMinus('-');
             }}
           >
             <span role="img" aria-label="WRONG">

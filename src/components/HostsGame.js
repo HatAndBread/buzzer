@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import AnswerCheck from './AnswerCheck';
 import HostAskQuestion from './HostAskQuestion';
 import Timer from './Timer';
@@ -9,6 +9,9 @@ import Hamburger from './Hamburger';
 import { sock } from '../App';
 
 let exit = 0;
+
+function reducer(state, action) {}
+
 export default function HostsGame(props) {
   const [answer, setAnswer] = useState(null);
   const [playerUnderReview, setPlayerUnderReview] = useState(null);
@@ -26,6 +29,7 @@ export default function HostsGame(props) {
   const [navOut, setNavOut] = useState(0);
   const [pointsAvailable, setPointsAvailable] = useState(props.playersList.length);
   const [pointsText, setPointsText] = useState('points');
+  const [plusOrMinus, setPlusOrMinus] = useState('+');
   const [showPoints, setShowPoints] = useState(false);
 
   useEffect(() => {
@@ -131,6 +135,10 @@ export default function HostsGame(props) {
     props.setBuzzes(removeArr);
     setAnswer(null);
     sock.emit('givePoints', props.gameCode, plyer, points);
+    setShowPoints(true);
+    setTimeout(() => {
+      setShowPoints(false);
+    }, 1000);
     if (points < 0) {
       showOhNo();
       props.failSound.play();
@@ -158,6 +166,7 @@ export default function HostsGame(props) {
     setShowAnswerCheck(false);
     setAnswer(null);
     setShowSadFace(false);
+    setNavOut(0);
     sock.emit('goToNext', props.gameCode);
   };
   const skipQuestion = () => {
@@ -166,6 +175,7 @@ export default function HostsGame(props) {
     setTimeLeft(0);
     setShowTimer(false);
     setQuestionTime(false);
+    setNavOut(0);
     toPlayersCheckingAnswers();
   };
   const toPlayersCheckingAnswers = () => {
@@ -230,6 +240,7 @@ export default function HostsGame(props) {
           answer={answer}
           handleAnswer={handleAnswer}
           pointsAvailable={pointsAvailable}
+          setPlusOrMinus={setPlusOrMinus}
           setPointsAvailable={setPointsAvailable}
         />
       )}
@@ -238,6 +249,7 @@ export default function HostsGame(props) {
           answer={answer}
           handleAnswer={handleAnswer}
           pointsAvailable={pointsAvailable}
+          setPlusOrMinus={setPlusOrMinus}
           setPointsAvailable={setPointsAvailable}
         />
       )}
@@ -266,10 +278,9 @@ export default function HostsGame(props) {
       <div className={styles.GamePin}>Game pin: {props.gameCode}</div>
       {showPoints && (
         <div className={styles.PositivePointsNotifier}>
-          + {pointsAvailable} {pointsText}!!!
+          {plusOrMinus} {pointsAvailable} {pointsText}!!!
         </div>
       )}
-      <div className={styles.NegativePointsNotifier}></div>
     </div>
   );
 }
