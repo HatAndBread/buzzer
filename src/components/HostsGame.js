@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect } from 'react';
 import AnswerCheck from './AnswerCheck';
 import HostAskQuestion from './HostAskQuestion';
 import Timer from './Timer';
@@ -9,8 +9,6 @@ import Hamburger from './Hamburger';
 import { sock } from '../App';
 
 let exit = 0;
-
-function reducer(state, action) {}
 
 export default function HostsGame(props) {
   const [answer, setAnswer] = useState(null);
@@ -34,18 +32,19 @@ export default function HostsGame(props) {
 
   useEffect(() => {
     showTimer && loopy();
-  }, [timerStartTime]);
+  }, [timerStartTime, showTimer]);
 
   useEffect(() => {
     if (timeLeft === 0) {
       setTimeLeft(timeLimit);
     }
-  }, [timeLeft]);
+  }, [timeLeft, timeLimit]);
+
   useEffect(() => {
     if (showAnswerCheck && props.buzzes.length === 0) {
       setShowSadFace(true);
     }
-  }, [showAnswerCheck]);
+  }, [showAnswerCheck, props.buzzes.length]);
 
   useEffect(() => {
     if (props.buzzes.length === props.playersList.length && showTimer) {
@@ -80,13 +79,14 @@ export default function HostsGame(props) {
         if (playersWhoAnswered.includes(el.name)) {
           console.log(`${el.name} answered`);
         } else {
-          console.log(`${el.name} didnt answer`);
+          console.log(`${el.name} didn't answer`);
           sock.emit('givePoints', props.gameCode, el, props.playersList.length * -1);
         }
       });
       console.log(props.hostGamePlayers); // this contains what you need to send
     }
   }, [showAnswerCheck]);
+
   useEffect(() => {
     if (showAnswerCheck && showSadFace) {
       props.timeUpSound.play();
