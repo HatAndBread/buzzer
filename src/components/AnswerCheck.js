@@ -9,7 +9,7 @@ export default function AnswerCheck(props) {
         <div className={styles.RightWrongButtons}>
           <button
             onClick={() => {
-              props.setPointsAvailable(props.pointsAvailable - 1);
+              //props.setPointsAvailable(props.pointsAvailable - 1);
               props.handleAnswer(props.pointsAvailable);
               props.setPlusOrMinus('+');
             }}
@@ -20,7 +20,7 @@ export default function AnswerCheck(props) {
           </button>
           <button
             onClick={() => {
-              props.setPointsAvailable(props.pointsAvailable - 1);
+              //props.setPointsAvailable(props.pointsAvailable - 1);
               props.handleAnswer(props.pointsAvailable * -1);
               props.setPlusOrMinus('-');
             }}

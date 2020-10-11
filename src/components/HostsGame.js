@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import AnswerCheck from './AnswerCheck';
 import HostAskQuestion from './HostAskQuestion';
 import Timer from './Timer';
@@ -32,14 +32,13 @@ export default function HostsGame(props) {
 
   useEffect(() => {
     showTimer && loopy();
-  }, [timerStartTime, showTimer]);
+  }, [timerStartTime]);
 
   useEffect(() => {
     if (timeLeft === 0) {
       setTimeLeft(timeLimit);
     }
-  }, [timeLeft, timeLimit]);
-
+  }, [timeLeft]);
   useEffect(() => {
     if (showAnswerCheck && props.buzzes.length === 0) {
       setShowSadFace(true);
@@ -79,19 +78,18 @@ export default function HostsGame(props) {
         if (playersWhoAnswered.includes(el.name)) {
           console.log(`${el.name} answered`);
         } else {
-          console.log(`${el.name} didn't answer`);
+          console.log(`${el.name} didnt answer`);
           sock.emit('givePoints', props.gameCode, el, props.playersList.length * -1);
         }
       });
       console.log(props.hostGamePlayers); // this contains what you need to send
     }
   }, [showAnswerCheck]);
-
   useEffect(() => {
     if (showAnswerCheck && showSadFace) {
       props.timeUpSound.play();
     }
-  }, [showAnswerCheck]);
+  }, [showAnswerCheck, showSadFace, props.timeUpSound]);
 
   function loopy() {
     if (Date.now() - timerStartTime + 900 < timeLimit * 1000 && !exit) {
@@ -138,6 +136,7 @@ export default function HostsGame(props) {
     setShowPoints(true);
     setTimeout(() => {
       setShowPoints(false);
+      setPointsAvailable(pointsAvailable - 1);
     }, 1000);
     if (points < 0) {
       showOhNo();
