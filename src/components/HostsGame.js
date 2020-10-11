@@ -44,7 +44,7 @@ export default function HostsGame(props) {
     if (showAnswerCheck && props.buzzes.length === 0) {
       setShowSadFace(true);
     }
-  }, [showAnswerCheck, props.buzzes.length]);
+  }, [showAnswerCheck]);
 
   useEffect(() => {
     if (props.buzzes.length === props.playersList.length && showTimer) {
@@ -91,7 +91,7 @@ export default function HostsGame(props) {
     if (showAnswerCheck && showSadFace) {
       props.timeUpSound.play();
     }
-  }, [showAnswerCheck, showSadFace, props.timeUpSound]);
+  }, [showAnswerCheck]);
 
   function loopy() {
     if (Date.now() - timerStartTime + 900 < timeLimit * 1000 && !exit) {
